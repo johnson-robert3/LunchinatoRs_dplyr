@@ -4,6 +4,7 @@
 library(tidyverse)
 library(lubridate)
 
+
 # data
 data_raw = read_csv("ames_weather_data.csv")
 
@@ -75,4 +76,5 @@ data %>%
    summarize_at(vars(precip),
                 .fun = ~sum(., na.rm=T)) %>%
    arrange(precip)
+
 
