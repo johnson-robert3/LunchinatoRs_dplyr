@@ -38,13 +38,17 @@ data = data %>%
 # calculate daily values of variables
 data_day = data %>%
    group_by(month, date) %>%
-   summarize_at(.vars = vars(temp:precip),
-                .funs = ~mean(., na.rm=T)) %>%
+   summarize(temp = mean(temp, na.rm=T),
+             humidity = mean(humidity, na.rm=T),
+             wind_dir = mean(wind_dir, na.rm=T),
+             wind_sp = mean(wind_sp, na.rm=T),
+             pressure = mean(pressure, na.rm=T),
+             precip = sum(precip, na.rm=T)) %>%
    ungroup()
 
 
 # look at only September
-data_sep = data_day %>%
+data_day %>%
    filter(month==9)
 
 
@@ -59,15 +63,23 @@ data_month = data %>%
 # which day had the most precipitation each month?
 data_day %>%
    group_by(month) %>%
-   arrange(desc(precip)) %>%
-   slice(1)
+   slice(which.max(precip))
+
+   # OR
+   data_day %>%
+      group_by(month) %>%
+      filter(precip == max(precip))
 
 
 # what was the coldest day each month?
 data_day %>%
    group_by(month) %>%
-   arrange(temp) %>%
-   slice(1)
+   slice(which.min(temp))
+
+   # OR
+   data_day %>%
+      group_by(month) %>%
+      filter(temp == min(temp))
 
 
 # which was the wettest month?
@@ -76,5 +88,6 @@ data %>%
    summarize_at(vars(precip),
                 .fun = ~sum(., na.rm=T)) %>%
    arrange(precip)
+
 
 
