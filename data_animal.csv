@@ -1,0 +1,11 @@
+animal_id,name,sp,age,start_length,start_weight,site_id
+11,Coco,tt,1,45,23,Bessey
+12,Tom,tt,1,34,56,Lago
+13,Pebbles,tt,2,56,45,Kildee
+14,Butter,tt,1,56,4,Science
+15,Nigel,tt,3,34,73,Kurtiss
+16,Kim,sf,4,23,56,Bessey
+17,Squeak,sf,5,46,67,Lago
+18,Spot,sf,4,67,4,Kildee
+19,Fancy,sf,8,54,34,Science
+20,Sharkbait,sf,5,87,34,Kurtiss
