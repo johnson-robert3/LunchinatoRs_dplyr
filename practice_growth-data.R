@@ -23,7 +23,7 @@ data_growth = read_csv("data_growth.csv")
 data_site %>%
    filter(region=="north")
 
-   # base
+   # base #
    data_site[data_site$region=="north", ]
 
 
@@ -31,7 +31,7 @@ data_site %>%
 data_animal %>%
    filter(sp=="tt")
 
-   # base
+   # base #
    data_animal[data_animal$sp=="tt", ]
 
 
@@ -39,7 +39,7 @@ data_animal %>%
 data_animal %>%
    filter(age>1)
 
-   # base
+   # base #
    data_animal[data_animal$age>1, ]
 
 
@@ -49,14 +49,14 @@ data_animal %>%
    # what is the value of the final measurement day?
    data_growth %>% pull(day) %>% unique()
    
-      #base
+      #base #
       unique(data_growth[["day"]])
    #---
 
 data_growth %>%
    filter(day==38)
 
-   # base
+   # base #
    data_growth[data_growth$day==38, ]
 
 
@@ -70,7 +70,7 @@ data_growth %>%
 data_site %>%
    select(site_id, region, veg_type)
 
-   # base
+   # base #
    data_site[ , c("site_id", "region", "veg_type")]
 
 
@@ -78,7 +78,7 @@ data_site %>%
 data_site %>%
    select(-veg_type)
 
-   # base
+   # base #
    subset(data_site, select = -veg_type)
 
 
@@ -86,7 +86,7 @@ data_site %>%
 data_site %>%
    select(lat:veg_type)
 
-   # base
+   # base #
    subset(data_site, select = lat:veg_type)
 
 
@@ -94,7 +94,7 @@ data_site %>%
 data_site %>%
    select(-lat:-long)
 
-   # base
+   # base #
    subset(data_site, select = -lat:-long)
 
 
@@ -108,7 +108,7 @@ data_site %>%
 data_growth %>%
    arrange(weight)
 
-   # base
+   # base #
    data_growth[order(data_growth$weight), ]
 
 
@@ -116,7 +116,7 @@ data_growth %>%
 data_growth %>%
    arrange(desc(weight))
 
-   # base
+   # base #
    data_growth[order(data_growth$weight, decreasing=T), ]
 
 
@@ -139,9 +139,9 @@ data_growth = data_growth %>%
 # replace_na()   (function from the 'tidyr' package (part of tidyverse))
 #---
 
-test= data_growth %>%
-   replace_na(list(length = -9999, weight = -9999))
-
+data_growth %>%
+   replace_na(list(length = -9999, weight = -9999)) %>%
+   print(n=Inf)
 
 
 ##_Adding new variables / columns to a data frame or altering existing variables
@@ -165,6 +165,7 @@ data_site %>%
 ##_Computing summary values from data
    
 ## summarizing over an entire data frame
+## i.e. compute a function over all rows in the data frame and return a single value (for each specified variable)
    
 #---
 # summarize()
