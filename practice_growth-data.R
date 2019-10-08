@@ -4,6 +4,9 @@
 
 library(tidyverse)
 
+# override default options to always print out (i.e. return) all rows of a data frame
+options(tibble.print_max = Inf)
+
 
 # data
 data_site = read_csv("data_site.csv")
@@ -140,8 +143,10 @@ data_growth = data_growth %>%
 #---
 
 data_growth %>%
-   replace_na(list(length = -9999, weight = -9999)) %>%
-   print(n=Inf)
+   replace_na(list(length = -9999, weight = -9999))
+
+data_growth %>%
+   replace_na(list(length = 0, weight = 0))
 
 
 ##_Adding new variables / columns to a data frame or altering existing variables
@@ -179,6 +184,57 @@ data_site %>%
 # calculate the mean temperature and precipitation across all sites
 data_site %>%
    summarize(mean(temp), mean(precip))
+
+
+## apply one function to multiple variables at the same time
+
+# what is the mean value (across all animals) of the starting animal ages, lengths, and weights
+data_animal %>%
+   summarize_at(.vars = vars(age:start_weight),
+                .funs = ~mean(., na.rm=T))
+
+# calculate mean temperature and precipitation across all sites (as above)
+data_site %>%
+   summarize_at(.vars = vars(temp, precip),
+                .funs = ~mean(., na.rm=T))
+
+
+## apply multiple functions to multiple variables at the same time
+
+# what are the mean and standard deviation (across all animals) of the starting animal ages, lengths, and weights
+data_animal %>%
+   summarize_at(.vars = vars(age:start_weight),
+                .funs = list(~mean(., na.rm=T), ~sd(., na.rm=T)))
+
+
+##_Work with groups/subsets of data rather than the entire data frame
+
+## split data frame into groups based on some variable, apply function(s) to each group, and re-combine into a data frame
+
+#---
+# group_by()
+#---
+
+# count the number of individuals present of each animal species
+data_animal %>%
+   group_by(sp) %>%
+   tally()
+
+# count the number weight growth measurements for each individual excluding missing values
+data_growth %>%
+   filter(!(is.na(weight))) %>%
+   group_by(animal_id) %>%
+   tally()
+
+# calculate the mean weight of all animals for each measurement day
+data_growth %>%
+   group_by(day) %>%
+   summarize(mean(weight, na.rm=T))
+
+# find the longest individual from each measurement day. Is it always the same individual?
+data_growth %>%
+   group_by(day) %>%
+   filter(length == max(length, na.rm=T))
 
 
 
