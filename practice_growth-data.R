@@ -120,5 +120,64 @@ data_growth %>%
    data_growth[order(data_growth$weight, decreasing=T), ]
 
 
+##_NAs, missing values, and erroneous values
+
+# convert erroneous or placeholder values to NA
+   
+#---
+# na_if()
+#---
+   
+# convert placeholder values of "-9999" in growth data to NA
+data_growth = data_growth %>%
+   na_if(-9999)
+   
+
+# convert missing or NA values to a specific value
+
+#---
+# replace_na()   (function from the 'tidyr' package (part of tidyverse))
+#---
+
+test= data_growth %>%
+   replace_na(list(length = -9999, weight = -9999))
+
+
+
+##_Adding new variables / columns to a data frame or altering existing variables
+   
+#---
+# mutate()
+#---
+   
+## add a new variable
+# add a new column for animal body condition index (BCI = weight / (length)^3)
+data_growth %>%
+   mutate(BCI = weight / length^3)
+
+
+## alter an existing variable
+# convert precipitation data from millimeters to centimeters
+data_site %>%
+   mutate(precip = precip/10)
+   
+
+##_Computing summary values from data
+   
+## summarizing over an entire data frame
+   
+#---
+# summarize()
+#---
+
+# calculate the mean temperature across all sites
+data_site %>%
+   summarize(mean(temp))
+
+
+# calculate the mean temperature and precipitation across all sites
+data_site %>%
+   summarize(mean(temp), mean(precip))
+
 
 
