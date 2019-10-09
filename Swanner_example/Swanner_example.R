@@ -51,3 +51,15 @@ data = data %>%
                            .$Element=="pH" ~ "pH",
                            .$Unit=="permil" ~ "per_mil",
                            .$Unit=="NTU" ~ "NTU"))
+
+
+
+## OR, to show the power of dplyr,
+## all of this processing can be done with only 6 lines of code!
+
+data = data_raw %>%
+   select(Date, Depth_m, chla_ugL, Turbidity_NTU, pH, d13C_DIC_permil) %>%
+   pivot_longer(cols = chla_ugL:d13C_DIC_permil, names_to = "Element", values_to = "Value", values_drop_na = T) %>%
+   arrange(Element) %>%
+   mutate(Element = replace(Element, .$Element=="d13C_DIC_permil", "d13CDIC_permil")) %>%
+   separate(col = Element, into = c("Element", "Unit"), sep = "_")
