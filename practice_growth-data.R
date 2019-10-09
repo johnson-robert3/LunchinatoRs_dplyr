@@ -237,4 +237,27 @@ data_growth %>%
    filter(length == max(length, na.rm=T))
 
 
+##_Join two data tables together
 
+#---
+# left_join()
+# full_join()
+#---
+
+# add site description data to table of individual animal data 
+left_join(data_animal, data_site, by = "site_id")
+
+full_join(data_animal, data_site, by = "site_id")
+
+# add data on the individual animals to the growth data
+left_join(data_growth, data_animal, by = "animal_id") %>%
+   arrange(site_id)
+
+# add all three data tables together to be able to view all starting data, descriptive site data, and growth data together
+left_join(data_growth, data_animal, by = "animal_id") %>%
+   left_join(., data_site, by = "site_id") %>%
+   arrange(animal_id)
+
+left_join(data_growth, data_animal, by = "animal_id") %>%
+   full_join(., data_site, by = "site_id") %>%
+   arrange(animal_id)
