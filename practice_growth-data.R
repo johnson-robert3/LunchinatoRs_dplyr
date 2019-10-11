@@ -261,3 +261,69 @@ left_join(data_growth, data_animal, by = "animal_id") %>%
 left_join(data_growth, data_animal, by = "animal_id") %>%
    full_join(., data_site, by = "site_id") %>%
    arrange(animal_id)
+
+
+
+###-----###
+
+## Using dplyr functions to calculate growth rates from these data
+
+
+# OPTION 1
+
+# need to get starting length and weight data with growth data
+# join the starting length and weight columns from data_animal to the data_growth table
+
+# select only the needed columns
+start = data_animal %>%
+   select(animal_id, starts_with("start_"))
+
+# join the tables together
+gr_1 = left_join(data_growth, start, by="animal_id")
+
+# calculate the mean daily growth rate for each animal from day 0 to the current measurement day
+gr_1 = gr_1 %>%
+   mutate(gr_length = (length - start_length) / day,
+          gr_weight = (weight - start_weight) / day) %>%
+   arrange(animal_id)
+
+
+# OPTION 2
+
+# add the starting length and weights of animals to the data_growth table as new data collected on day "0"
+# i.e. add the data as new rows, rather than new columns
+
+test = data_animal %>%
+   # add a new "day" column for starting data
+   mutate(day = rep(0, length(animal_id))) %>%
+   # rename columns
+   rename(length = start_length,
+          weight = start_weight) %>%
+   # select the desired columns
+   select(animal_id, day, length, weight)
+
+# combine the day-0 data with the growth data
+gr_2 = bind_rows(data_growth, test)
+
+
+### calculate the mean daily growth rate for each animal from day 0 to the current measurement day
+gr_2_total = gr_2 %>%
+   # arrange by measurement day and animal
+   arrange(animal_id, day) %>%
+   # compute within each individual animal
+   group_by(animal_id) %>%
+   # calculate growth rate based on the current measurement compared to the first measurement in the group (i.e. day 0)
+   mutate(gr_length = (length - first(length)) / day,
+          gr_weight = (weight - first(weight)) / day)
+
+
+### calculate the growth rate for each growth interval
+# i.e. the growth rate since the previous measurement
+gr_2_each = gr_2 %>%
+   arrange(animal_id, day) %>%
+   group_by(animal_id) %>%
+   # calculate growth rate based on the current measurement compared to the previous measurement
+   mutate(gr_length = (length - lag(length)) / (day - lag(day)),
+          gr_weight = (weight - lag(weight)) / (day - lag(day)))
+
+
