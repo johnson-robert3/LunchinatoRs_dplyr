@@ -22,4 +22,4 @@ Practice data sets and scripts are also provided for exploring dplyr's functions
 - full_join()
 
 
-###### *Robert Johnson (Sep. 2020)*
+###### *Robert Johnson (Oct. 2020)*
